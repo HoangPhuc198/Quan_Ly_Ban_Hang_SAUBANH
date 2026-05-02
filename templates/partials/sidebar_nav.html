@@ -1,0 +1,54 @@
+{# Dùng chung cho sidebar desktop và offcanvas mobile — biến r = role #}
+{% set r = (current_role or '')|upper %}
+<nav class="nav flex-column sidebar-nav-inner px-2 pb-3">
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('dashboard') %}active{% endif %}"
+     href="{{ url_for('dashboard.dashboard') }}">
+    <i class="bi bi-speedometer2 sidebar-nav-icon" aria-hidden="true"></i><span>Tổng quan</span>
+  </a>
+  {% if r in ['OWNER', 'ADMIN', 'CASHIER', 'SALE'] %}
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('sales') %}active{% endif %}"
+     href="{{ url_for('sales.sales') }}">
+    <i class="bi bi-cart3 sidebar-nav-icon" aria-hidden="true"></i><span>Bán hàng (POS)</span>
+  </a>
+  {% endif %}
+  {% if r in ['OWNER', 'ADMIN', 'CASHIER', 'SALE'] %}
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('invoice') %}active{% endif %}"
+     href="{{ url_for('invoice.invoices') }}">
+    <i class="bi bi-receipt-cutoff sidebar-nav-icon" aria-hidden="true"></i><span>Hóa đơn &amp; truy vết</span>
+  </a>
+  {% endif %}
+  {% if r in ['OWNER', 'ADMIN', 'CASHIER', 'SALE', 'WAREHOUSE'] %}
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('product') %}active{% endif %}"
+     href="{{ url_for('product.products') }}">
+    <i class="bi bi-box-seam sidebar-nav-icon" aria-hidden="true"></i><span>Sản phẩm &amp; giá</span>
+  </a>
+  {% endif %}
+  {% if r in ['OWNER', 'ADMIN', 'WAREHOUSE', 'CASHIER', 'SALE'] %}
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('stock') %}active{% endif %}"
+     href="{{ url_for('stock.stock') }}">
+    <i class="bi bi-archive sidebar-nav-icon" aria-hidden="true"></i><span>Tồn kho</span>
+  </a>
+  {% endif %}
+  {% if r in ['OWNER', 'ADMIN', 'WAREHOUSE'] %}
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('purchase') %}active{% endif %}"
+     href="{{ url_for('purchase.purchase') }}">
+    <i class="bi bi-truck sidebar-nav-icon" aria-hidden="true"></i><span>Nhập hàng</span>
+  </a>
+  {% endif %}
+  {% if r in ['OWNER', 'ADMIN', 'CASHIER', 'SALE'] %}
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('customer') %}active{% endif %}"
+     href="{{ url_for('customer.customers') }}">
+    <i class="bi bi-people sidebar-nav-icon" aria-hidden="true"></i><span>Khách hàng</span>
+  </a>
+  {% endif %}
+  {% if r in ['OWNER', 'ADMIN'] %}
+  <a class="nav-link sidebar-nav-link {% if request.endpoint and request.endpoint.startswith('report') %}active{% endif %}"
+     href="{{ url_for('report.reports') }}">
+    <i class="bi bi-graph-up-arrow sidebar-nav-icon" aria-hidden="true"></i><span>Báo cáo</span>
+  </a>
+  {% endif %}
+  <hr class="sidebar-divider my-3 opacity-25">
+  <a class="nav-link sidebar-nav-link sidebar-nav-link--danger" href="{{ url_for('auth.logout') }}">
+    <i class="bi bi-box-arrow-right sidebar-nav-icon" aria-hidden="true"></i><span>Đăng xuất</span>
+  </a>
+</nav>

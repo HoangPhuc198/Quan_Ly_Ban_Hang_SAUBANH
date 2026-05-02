@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Sơ đồ CSDL &amp; nghiệp vụ{% endblock %}
+{% block page_title %}Khối thống nhất: View — Procedure — Trigger{% endblock %}
+{% block content %}
+<p class="lead fs-6 mb-4">
+  Trang này mô tả <strong>luồng dữ liệu</strong> trong SQL Server và liên kết tới các màn hình web đã triển khai.
+  Màu chủ đạo của ứng dụng là <strong>xanh biển</strong>, thể hiện sự ổn định và chuyên nghiệp của kênh bán &amp; kho.
+</p>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100 sys-flow-card">
+      <div class="card-body">
+        <h5 class="card-title text-primary">Kho &amp; giá</h5>
+        <ul class="small mb-0">
+          <li><code>V_SANPHAM_TONKHO</code>, <code>V_SANPHAM_SAP_HET</code>, <code>V_HANG_TON_LAU</code></li>
+          <li><code>V_GIA_HIEN_TAI</code> + trigger <code>TRG_CHECK_GIA</code></li>
+        </ul>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{{ url_for('stock.stock') }}">Tồn kho</a>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{{ url_for('product.products') }}">Sản phẩm &amp; giá</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100 sys-flow-card">
+      <div class="card-body">
+        <h5 class="card-title text-primary">Bán hàng</h5>
+        <ul class="small mb-0">
+          <li><code>usp_TAO_HOADON_BAN</code> → <code>usp_THEM_CTHDB</code> → <code>usp_THANH_TOAN_HOADON_BAN</code></li>
+          <li><code>V_HOADON_BAN_CHITIET</code>, <code>V_DOANH_THU_THEO_THANG</code>, <code>usp_TOP_SANPHAM</code></li>
+          <li>Trigger chốt hóa đơn: <code>TRG_KHONG_SUA_HOADON_CU</code></li>
+        </ul>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{{ url_for('sales.sales') }}">POS</a>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{{ url_for('invoice.invoices') }}">Truy vết HĐ</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100 sys-flow-card">
+      <div class="card-body">
+        <h5 class="card-title text-primary">Nhập &amp; công nợ</h5>
+        <ul class="small mb-0">
+          <li><code>usp_TAO_HOADON_NHAP</code>, <code>usp_THEM_CTHDN</code>, <code>usp_THANH_TOAN_HDN</code></li>
+          <li><code>V_HOADON_NHAP_CHITIET</code>, <code>V_CONGNO_HOADON</code>, <code>usp_BAOCAO_CONGNO</code></li>
+          <li>Trigger: <code>TRG_THANHTOAN_CHECK_CONGNO</code>, <code>TRG_KHONG_XOA_NCC</code></li>
+        </ul>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{{ url_for('purchase.purchase') }}">Nhập hàng</a>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{{ url_for('report.reports') }}">Báo cáo</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-header fw-semibold">Sơ đồ luồng (tóm tắt)</div>
+  <div class="card-body small">
+    <pre class="mb-0 text-muted" style="white-space: pre-wrap; font-family: ui-monospace, monospace;">
+[BÁN]  usp_TAO_HOADON_BAN ─► CHITIET qua usp_THEM_CTHDB (UPDLOCK tồn) ─► usp_THANH_TOAN_HOADON_BAN
+              │                                                      │
+              └──────────────── DIEM / KM ◄── usp_TICH_DIEM, usp_SUDUNG_DIEM + V_DIEM_KHACHHANG
+
+[IMPORT] usp_TAO_HOADON_NHAP ─► usp_THEM_CTHDN ─► THANHTOAN + trigger TRG_THANHTOAN_CHECK_CONGNO
+              │
+              └── Views: V_TONG_THANHTOAN_NHAP → V_CONG_NO_NHA_CUNG_CAP, V_CONGNO_HOADON
+
+[GIÁ]   BANGGIA ──► TRG_CHECK_GIA (không âm, không trùng khung thời gian) ──► V_GIA_HIEN_TAI (đọc giá hiện hành)
+    </pre>
+  </div>
+</div>
+
+<div class="accordion" id="sysAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#sys1">Nhóm View khách hàng / kho</button>
+    </h2>
+    <div id="sys1" class="accordion-collapse collapse show" data-bs-parent="#sysAccordion">
+      <div class="accordion-body small">
+        <strong>V_SANPHAM_TONKHO</strong> → chi tiết tồn theo biến thể;
+        <strong>V_SANPHAM_SAP_HET</strong> (SL_TONKHO ≤ 10);
+        <strong>V_HANG_TON_LAU</strong> (bán chậm / không giao dịch 30 ngày);
+        <strong>V_GIA_HIEN_TAI</strong> — đồng bộ với màn <em>Sản phẩm</em> &amp; POS.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sys2">Nhóm View bán hàng / báo cáo</button>
+    </h2>
+    <div id="sys2" class="accordion-collapse collapse" data-bs-parent="#sysAccordion">
+      <div class="accordion-body small">
+        <strong>V_HOADON_BAN_CHITIET</strong> (trang Hóa đơn),
+        <strong>V_DOANH_THU_THEO_THANG</strong>, <strong>V_TOP_SANPHAM_BAN_CHAY</strong> + <strong>usp_TOP_SANPHAM</strong>,
+        kết hợp dashboard &amp; báo cáo quản trị.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sys3">Trigger an toàn nghiệp vụ</button>
+    </h2>
+    <div id="sys3" class="accordion-collapse collapse" data-bs-parent="#sysAccordion">
+      <div class="accordion-body small">
+        Bảo vệ NCC / sản phẩm đã phát sinh giao dịch; kiểm soát giá; chặn thanh toán vượt nợ; khóa sửa/xóa hóa đơn đã thu tiền —
+        đảm bảo procedure ở tầng ứng dụng không thể “vượt” quy tắc khi đã cấp quyền EXEC.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

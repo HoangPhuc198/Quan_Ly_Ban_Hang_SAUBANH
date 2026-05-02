@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Báo cáo{% endblock %}
+{% block page_title %}Báo cáo{% endblock %}
+{% block content %}
+{% set rep = report %}
+<p class="small text-muted mb-3">
+  Tổng hợp doanh thu, top sản phẩm, hàng sắp hết, hàng tồn lâu và công nợ nhập.
+</p>
+<div class="accordion" id="repAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1">Doanh thu theo tháng</button></h2>
+    <div id="c1" class="accordion-collapse collapse show" data-bs-parent="#repAccordion">
+      <div class="accordion-body p-0 table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr>
+            {% if rep.doanh_thu and rep.doanh_thu|length > 0 %}
+              {% for k in rep.doanh_thu[0].keys() %}<th>{{ k }}</th>{% endfor %}
+            {% else %}<th>Không có dữ liệu</th>{% endif %}
+          </tr></thead>
+          <tbody>
+            {% for row in rep.doanh_thu or [] %}
+            <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">Top sản phẩm</button></h2>
+    <div id="c2" class="accordion-collapse collapse" data-bs-parent="#repAccordion">
+      <div class="accordion-body p-0 table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr>
+            {% if rep.top and rep.top|length > 0 %}
+              {% for k in rep.top[0].keys() %}<th>{{ k }}</th>{% endfor %}
+            {% else %}<th>Không có dữ liệu</th>{% endif %}
+          </tr></thead>
+          <tbody>
+            {% for row in rep.top or [] %}
+            <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3">Hàng sắp hết</button></h2>
+    <div id="c3" class="accordion-collapse collapse" data-bs-parent="#repAccordion">
+      <div class="accordion-body p-0 table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr>
+            {% if rep.sap_het and rep.sap_het|length > 0 %}
+              {% for k in rep.sap_het[0].keys() %}<th>{{ k }}</th>{% endfor %}
+            {% else %}<th>Không có dữ liệu</th>{% endif %}
+          </tr></thead>
+          <tbody>
+            {% for row in rep.sap_het or [] %}
+            <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c4">Hàng tồn lâu</button></h2>
+    <div id="c4" class="accordion-collapse collapse" data-bs-parent="#repAccordion">
+      <div class="accordion-body p-0 table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr>
+            {% if rep.hang_ton_lau and rep.hang_ton_lau|length > 0 %}
+              {% for k in rep.hang_ton_lau[0].keys() %}<th>{{ k }}</th>{% endfor %}
+            {% else %}<th>Không có dữ liệu</th>{% endif %}
+          </tr></thead>
+          <tbody>
+            {% for row in rep.hang_ton_lau or [] %}
+            <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c5">Công nợ nhập</button></h2>
+    <div id="c5" class="accordion-collapse collapse" data-bs-parent="#repAccordion">
+      <div class="accordion-body p-0 table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr>
+            {% if rep.cong_no and rep.cong_no|length > 0 %}
+              {% for k in rep.cong_no[0].keys() %}<th>{{ k }}</th>{% endfor %}
+            {% else %}<th>Không có dữ liệu</th>{% endif %}
+          </tr></thead>
+          <tbody>
+            {% for row in rep.cong_no or [] %}
+            <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

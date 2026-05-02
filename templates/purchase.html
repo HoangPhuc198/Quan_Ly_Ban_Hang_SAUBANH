@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Nhập hàng{% endblock %}
+{% block page_title %}Nhập hàng{% endblock %}
+{% block content %}
+<p class="small text-muted mb-3">
+  Phiếu nhập khởi tạo qua <code>usp_TAO_HOADON_NHAP</code> (không có chiết khấu trên phiếu — chiết khấu thuộc nghiệp vụ khác trên <code>HDBAN</code>).
+  Chi tiết nhập đồng bộ tồn kho &amp; tổng tiền qua <code>usp_THEM_CTHDN</code>.
+</p>
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-header fw-semibold">Tạo phiếu nhập</div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('purchase.purchase_create') }}">
+          <div class="mb-2">
+            <label class="form-label small">Mã hóa đơn nhập</label>
+            <input name="ma_hdn" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Mã nhà cung cấp</label>
+            <input name="ma_ncc" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Mã nhân viên</label>
+            <input name="ma_nv" class="form-control form-control-sm" value="{{ default_ma_nv }}" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">Tạo phiếu nhập</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100 border-success">
+      <div class="card-header fw-semibold bg-success text-white">Thêm chi tiết nhập</div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('purchase.purchase_add_item') }}" id="formPurchaseItem">
+          <div class="mb-2">
+            <label class="form-label small">Mã hóa đơn nhập</label>
+            <input name="ma_hdn" id="pur_ma_hdn" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Mã sản phẩm chi tiết</label>
+            <input name="ma_spct" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Số lượng nhập</label>
+            <input name="so_luong" type="number" min="1" class="form-control form-control-sm" value="1" required>
+          </div>
+          <button type="submit" class="btn btn-success btn-sm">Thêm chi tiết</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/purchase.js') }}"></script>
+{% endblock %}

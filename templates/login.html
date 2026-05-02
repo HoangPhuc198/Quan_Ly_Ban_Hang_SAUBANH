@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Đăng nhập — Seller Management System{% endblock %}
+{% block content_unauth %}
+<div class="login-page min-vh-100 d-flex flex-column flex-lg-row">
+  <div class="login-hero position-relative flex-grow-1 d-flex flex-column justify-content-center px-4 py-5 p-lg-5 text-white overflow-hidden">
+    <div class="login-hero-pattern" aria-hidden="true"></div>
+    <div class="position-relative" style="max-width: 28rem;">
+      <div class="login-badge mb-3 d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill">
+        <i class="bi bi-shop-window" aria-hidden="true"></i>
+        <span class="small fw-semibold text-uppercase tracking-wide">Bán lẻ · POS · Kho</span>
+      </div>
+      <h1 class="login-company-name fw-bold mb-2">{{ business_name }}</h1>
+      <p class="login-hero-lead mb-4">Hệ thống quản lý bán hàng và kho vận.</p>
+      <div class="login-hero-tags d-flex flex-wrap gap-2">
+        <span class="login-tag"><i class="bi bi-receipt"></i> Hóa đơn</span>
+        <span class="login-tag"><i class="bi bi-box-seam"></i> Tồn kho</span>
+        <span class="login-tag"><i class="bi bi-people"></i> Khách hàng</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-shell flex-shrink-0 d-flex align-items-center justify-content-center px-3 py-4 py-lg-5">
+    <div class="w-100" style="max-width: 420px;">
+      <div class="card login-card border-0 shadow-lg">
+        <div class="card-body p-4 p-md-5">
+          <div class="text-center mb-4">
+            <div class="login-form-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+              <i class="bi bi-person-badge fs-3 text-white" aria-hidden="true"></i>
+            </div>
+            <h2 class="h4 mb-1 fw-bold" style="color: var(--ocean-deep);">Đăng nhập hệ thống</h2>
+            <p class="text-muted small mb-0">Vui lòng nhập tài khoản để tiếp tục.</p>
+          </div>
+          <form method="post" action="{{ url_for('auth.login') }}" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label class="form-label fw-medium" for="username">Tên đăng nhập</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted" aria-hidden="true"></i></span>
+                <input type="text" class="form-control border-start-0 ps-0" id="username" name="username" required autocomplete="username" placeholder="Nhập tên đăng nhập">
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-medium" for="password">Mật khẩu</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-lock text-muted" aria-hidden="true"></i></span>
+                <input type="password" class="form-control border-start-0 ps-0" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100 py-2 fw-semibold shadow-sm">
+              <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Đăng nhập
+            </button>
+          </form>
+          <p class="text-center text-muted small mt-4 mb-0">
+            <i class="bi bi-lock-fill me-1" style="color: var(--ocean-mid);" aria-hidden="true"></i>
+            Kết nối an toàn tới cơ sở dữ liệu nội bộ của bạn.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

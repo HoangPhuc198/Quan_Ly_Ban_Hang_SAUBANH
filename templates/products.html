@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Sản phẩm{% endblock %}
+{% block page_title %}Sản phẩm &amp; giá niêm yết{% endblock %}
+{% block content %}
+<p class="small text-muted mb-3">
+  Dữ liệu ghép <strong>V_SANPHAM_TONKHO</strong> + <strong>V_GIA_HIEN_TAI</strong> theo <code>MASPCT</code>.
+  View <code>V_GIA_HIEN_TAI</code> chỉ hiển thị dòng trong <strong>BANGGIA</strong> có hiệu lực tại thời điểm hiện tại:
+  <code>NGAY_BAT_DAU &lt;= GETDATE()</code> và (<code>NGAY_KET_THUC IS NULL</code> hoặc <code>NGAY_KET_THUC &gt;= GETDATE()</code>),
+  thống nhất với mô tả và trigger giá trong bài.
+</p>
+<div class="card shadow-sm mb-3">
+  <div class="card-body row g-2 align-items-end">
+    <div class="col-md-4">
+      <label class="form-label small mb-0">Tìm kiếm</label>
+      <input type="search" id="productSearch" class="form-control form-control-sm" placeholder="Tên hoặc mã...">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label small mb-0">Tồn kho</label>
+      <select id="productStockFilter" class="form-select form-select-sm">
+        <option value="all">Tất cả</option>
+        <option value="instock">Còn hàng</option>
+        <option value="low">Sắp hết (≤ 10)</option>
+        <option value="out">Hết hàng</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="card shadow-sm">
+  <div class="card-body p-0 table-responsive">
+    <table class="table table-hover mb-0 table-sm" id="productTable">
+      <thead class="table-light">
+        <tr>
+          <th>Mã SP chi tiết</th>
+          <th>Tên</th>
+          <th>Màu</th>
+          <th>Size</th>
+          <th>Giá bán</th>
+          <th>Tồn kho</th>
+          <th>Mã SP gốc</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        {% set ma = p | field('MASPCT','MaSPCT','MaCTSP') %}
+        {% set ma_goc = p | field('MASP','MaSP') %}
+        {% set ten = p | field('TENSP','TenSP','TenSanPham') %}
+        {% set mau = p | field('TEN_MAU','Mau','MauSac','COLOR') %}
+        {% set sz = p | field('TEN_SIZE','Size','KichCo','SIZE') %}
+        {% set gia = p | field('DONGIA_BAN','GiaBan','DonGia','GIA') %}
+        {% set co_gia_hieu_luc = p | field('HAS_ACTIVE_PRICE') %}
+        {% set ton = p | field('SL_TONKHO','SoLuongTon','SLTon','TonKho','SoLuong') %}
+        {% set ton_num = ton | to_float %}
+        <tr class="product-row"
+            data-stock="{{ 'out' if ton_num <= 0 else ('low' if ton_num <= 10 else 'instock') }}"
+            data-search="{{ (ma ~ ' ' ~ ten)|lower }}">
+          <td class="font-monospace">{{ ma }}</td>
+          <td>{{ ten }}</td>
+          <td>{{ mau }}</td>
+          <td>{{ sz }}</td>
+          <td>
+            {% if co_gia_hieu_luc %}
+              {{ "{:,.2f}".format(gia | to_float) }}
+            {% else %}
+              <span class="badge bg-light text-muted border">Chưa có giá hiệu lực</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if ton_num <= 0 %}<span class="badge bg-secondary">Hết</span>{% elif ton_num <= 10 %}<span class="badge bg-warning text-dark">Sắp hết</span>{% else %}<span class="badge bg-success">Còn</span>{% endif %}
+            {{ ton }}
+          </td>
+          <td class="font-monospace small">{{ ma_goc }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/product.js') }}"></script>
+{% endblock %}

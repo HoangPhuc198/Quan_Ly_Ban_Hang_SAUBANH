@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}Tổng quan — Seller Management System{% endblock %}
+{% block page_title %}Tổng quan{% endblock %}
+{% block content %}
+{% set d = dashboard %}
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <div class="card kpi-card h-100 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">Dòng tồn kho</div>
+        <div class="fs-4 fw-semibold">{{ d.count_ton_lines }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card kpi-card h-100 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">Sản phẩm sắp hết</div>
+        <div class="fs-4 fw-semibold">{{ d.count_sap_het }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card kpi-card h-100 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">Hàng tồn lâu</div>
+        <div class="fs-4 fw-semibold">{{ d.count_ton_lau }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card kpi-card h-100 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small">Top SP (dòng)</div>
+        <div class="fs-4 fw-semibold">{{ (d.top_san_pham or [])|length }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if show_finance_charts %}
+<div class="card shadow-sm mb-3">
+  <div class="card-header fw-semibold">Doanh thu theo tháng</div>
+  <div class="card-body">
+    <canvas id="chartDoanhThu" height="100"></canvas>
+    <div class="table-responsive mt-3">
+      <table class="table table-sm table-striped mb-0">
+        <thead><tr>
+          {% if d.doanh_thu_thang and d.doanh_thu_thang|length > 0 %}
+            {% for key in d.doanh_thu_thang[0].keys() %}
+            <th>{{ key }}</th>
+            {% endfor %}
+          {% else %}
+            <th>Không có dữ liệu</th>
+          {% endif %}
+        </tr></thead>
+        <tbody>
+          {% for row in d.doanh_thu_thang or [] %}
+          <tr>
+            {% for v in row.values() %}
+            <td>{{ v }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">Bạn đang xem tổng quan rút gọn. Chi tiết doanh thu chỉ dành cho chủ cửa hàng / quản lý.</div>
+{% endif %}
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-header fw-semibold">Top sản phẩm bán chạy</div>
+      <div class="card-body p-0 table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+          <thead class="table-light">
+            <tr>
+              {% if d.top_san_pham and d.top_san_pham|length > 0 %}
+                {% for key in d.top_san_pham[0].keys() %}
+                <th>{{ key }}</th>
+                {% endfor %}
+              {% else %}
+                <th>Không có dữ liệu</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in d.top_san_pham or [] %}
+            <tr>
+              {% for v in row.values() %}
+              <td>{{ v }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-header fw-semibold">Sản phẩm sắp hết</div>
+      <div class="card-body p-0 table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+          <thead class="table-light">
+            <tr>
+              {% if d.san_pham_sap_het and d.san_pham_sap_het|length > 0 %}
+                {% for key in d.san_pham_sap_het[0].keys() %}
+                <th>{{ key }}</th>
+                {% endfor %}
+              {% else %}
+                <th>Không có dữ liệu</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in d.san_pham_sap_het or [] %}
+            <tr>
+              {% for v in row.values() %}
+              <td>{{ v }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+{% if show_finance_charts and dashboard.doanh_thu_thang %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  (function() {
+    const rows = {{ dashboard.doanh_thu_thang | tojson }};
+    if (!rows || !rows.length) return;
+    const labels = rows.map(r => Object.values(r)[0]);
+    const values = rows.map(r => {
+      const vals = Object.values(r);
+      const num = vals.find(v => typeof v === 'number' || !isNaN(parseFloat(v)));
+      return num !== undefined ? parseFloat(num) : 0;
+    });
+    const ctx = document.getElementById('chartDoanhThu');
+    if (ctx) new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [{ label: 'Doanh thu', data: values, backgroundColor: 'rgba(13, 110, 253, 0.35)', borderColor: 'rgba(13, 110, 253, 1)', borderWidth: 1 }] },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+  })();
+</script>
+{% endif %}
+{% endblock %}

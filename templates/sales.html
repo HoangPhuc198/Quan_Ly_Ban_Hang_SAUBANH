@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Bán hàng — POS{% endblock %}
+{% block page_title %}Bán hàng (POS){% endblock %}
+{% block content %}
+<p class="small text-muted mb-3">
+  Luồng: <code>usp_TAO_HOADON_BAN</code> → <code>usp_THEM_CTHDB</code> (kiểm tồn &amp; khóa kho; giá trong <code>usp_THEM_CTHDB</code> căn cứ <strong>BANGGIA</strong> và ngày hóa đơn trong bài)
+  → <code>usp_THANH_TOAN_HOADON_BAN</code>.
+  Giá hiển thị tại POS cùng nguồn với bảng giá trong bài: <strong>V_GIA_HIEN_TAI</strong>
+  (<code>NGAY_BAT_DAU</code>, <code>NGAY_KET_THUC</code>) ghép với <code>V_SANPHAM_TONKHO</code>.
+</p>
+<div class="row g-3 pos-layout">
+  <div class="col-xl-7">
+    <div class="card shadow-sm h-100">
+      <div class="card-header d-flex flex-wrap gap-2 align-items-center justify-content-between">
+        <span class="fw-semibold">Sản phẩm</span>
+        <input type="search" id="posProductSearch" class="form-control form-control-sm w-auto pos-search" placeholder="Tìm tên hoặc mã...">
+      </div>
+      <div class="card-body p-0 table-responsive pos-product-table-wrap">
+        <table class="table table-hover table-sm mb-0 align-middle" id="posProductTable">
+          <thead class="table-light sticky-top">
+            <tr>
+              <th>Mã / Chi tiết</th>
+              <th>Tên</th>
+              <th>Tồn</th>
+              <th>Giá</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in products %}
+            {% set ma = p | field('MASPCT','MaSPCT','MaCTSP','MACTSP') %}
+            {% set ten = p | field('TENSP','TenSP','TenSanPham') %}
+            {% set ton = p | field('SL_TONKHO','SoLuongTon','SLTon','TonKho','SoLuong') %}
+            {% set gia = p | field('DONGIA_BAN','GiaBan','DonGia','GIA') %}
+            {% set co_gia_hieu_luc = p | field('HAS_ACTIVE_PRICE') %}
+            {% set ton_num = ton | to_float %}
+            <tr class="pos-product-row"
+                data-search="{{ (ma ~ ' ' ~ ten)|lower }}">
+              <td class="font-monospace small">{{ ma }}</td>
+              <td>{{ ten }}</td>
+              <td>
+                {% if ton_num <= 0 %}
+                  <span class="badge bg-secondary">Hết hàng</span>
+                {% elif ton_num <= 10 %}
+                  <span class="badge bg-warning text-dark">Sắp hết</span>
+                {% else %}
+                  <span class="badge bg-success">Còn hàng</span>
+                {% endif %}
+                <span class="ms-1">{{ ton }}</span>
+              </td>
+              <td>
+                {% if co_gia_hieu_luc %}
+                  {{ "{:,.2f}".format(gia | to_float) }}
+                {% else %}
+                  <span class="text-muted small">Chưa niêm yết</span>
+                {% endif %}
+              </td>
+              <td>
+                <button type="button" class="btn btn-sm btn-outline-primary btn-select-product"
+                        data-ma="{{ ma }}">Chọn</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-5">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold">1. Tạo hóa đơn</div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('sales.create_invoice') }}">
+          <div class="mb-2">
+            <label class="form-label small">Mã hóa đơn</label>
+            <input name="ma_hdb" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Mã nhân viên</label>
+            <input name="ma_nv" class="form-control form-control-sm" value="{{ default_ma_nv }}" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Mã khách hàng</label>
+            <input name="ma_kh" class="form-control form-control-sm" placeholder="Trống = khách vãng lai (NULL)">
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Chiết khấu</label>
+            <input name="chiet_khau" type="number" step="0.01" min="0" class="form-control form-control-sm" value="0">
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">Tạo hóa đơn</button>
+        </form>
+      </div>
+    </div>
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold">2. Thêm sản phẩm</div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('sales.add_item') }}" id="formAddItem">
+          <div class="mb-2">
+            <label class="form-label small">Mã hóa đơn</label>
+            <input name="ma_hdb" id="add_ma_hdb" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Mã sản phẩm chi tiết</label>
+            <input name="ma_spct" id="add_ma_spct" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Số lượng</label>
+            <input name="so_luong" type="number" min="1" class="form-control form-control-sm" value="1" required>
+          </div>
+          <button type="submit" class="btn btn-outline-primary btn-sm">Thêm vào hóa đơn</button>
+        </form>
+      </div>
+    </div>
+    <div class="card shadow-sm border-primary">
+      <div class="card-header fw-semibold bg-primary text-white">3. Thanh toán</div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('sales.checkout') }}">
+          <div class="mb-2">
+            <label class="form-label small">Mã hóa đơn</label>
+            <input name="ma_hdb" id="pay_ma_hdb" class="form-control form-control-sm" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Tiền khách đưa</label>
+            <input name="tien_khach_dua" type="number" step="0.01" min="0.01" class="form-control form-control-sm" required>
+          </div>
+          <button type="submit" class="btn btn-success w-100 btn-lg">Thanh toán</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/sales.js') }}"></script>
+{% endblock %}

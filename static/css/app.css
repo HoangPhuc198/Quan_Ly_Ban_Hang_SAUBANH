@@ -1,0 +1,427 @@
+/*
+ * Seller Management System — xanh biển chủ đạo + accent cát / san hô
+ */
+:root {
+  --app-sidebar-width: min(288px, 26vw);
+  --app-sidebar-width-lg: 288px;
+  --ocean-deep: #084c61;
+  --ocean-mid: #0a7ea4;
+  --ocean-bright: #0ea5c9;
+  --ocean-tint: #e8f4fa;
+  --ocean-card: #ffffff;
+  --sand-accent: #f4b942;
+  --coral-accent: #e07a5f;
+  --slate-accent: #64748b;
+  --text-muted-ocean: #5c7280;
+  --app-card-radius: 0.65rem;
+  --sidebar-link-min-h: 3rem;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+.app-body {
+  background: linear-gradient(165deg, var(--ocean-tint) 0%, #eef2f7 42%, #f1f5f9 100%);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #1e293b;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+/* Sidebar — desktop */
+.app-sidebar {
+  width: var(--app-sidebar-width-lg);
+  max-width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(185deg, var(--ocean-deep) 0%, #0a5f78 48%, var(--ocean-mid) 100%);
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  box-shadow: 6px 0 32px rgba(8, 76, 97, 0.28);
+}
+
+@media (min-width: 1400px) {
+  .app-sidebar--desktop {
+    width: min(304px, 22vw);
+  }
+}
+
+.sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-brand .brand-title {
+  color: #fff;
+  letter-spacing: 0.04em;
+  font-size: 1.35rem;
+}
+
+.sidebar-brand .brand-sub {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.82rem;
+}
+
+.sidebar-nav-inner .sidebar-divider {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav-link {
+  display: flex !important;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.92) !important;
+  border-radius: 0.5rem;
+  margin-bottom: 0.2rem;
+  font-size: clamp(0.95rem, 0.9rem + 0.35vw, 1.05rem);
+  font-weight: 500;
+  padding: 0.65rem 0.85rem !important;
+  min-height: var(--sidebar-link-min-h);
+  line-height: 1.25;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.sidebar-nav-link:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+.sidebar-nav-link:focus-visible {
+  outline: 2px solid var(--sand-accent);
+  outline-offset: 2px;
+}
+
+.sidebar-nav-link.active {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important;
+  color: #fff !important;
+  font-weight: 700;
+  border-left: 4px solid var(--sand-accent);
+  padding-left: calc(0.85rem - 4px) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-nav-icon {
+  font-size: 1.35rem;
+  width: 2rem;
+  text-align: center;
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+.sidebar-nav-link--danger {
+  color: #fecaca !important;
+}
+
+.sidebar-nav-link--danger:hover {
+  background: rgba(239, 68, 68, 0.28) !important;
+  color: #fff !important;
+}
+
+/* Mobile offcanvas sidebar */
+.app-offcanvas-sidebar {
+  width: min(320px, 88vw) !important;
+  background: linear-gradient(185deg, var(--ocean-deep) 0%, #0a5f78 50%, var(--ocean-mid) 100%);
+  border-right: none !important;
+}
+
+.app-offcanvas-sidebar .offcanvas-header {
+  padding: 1rem 1.1rem;
+}
+
+/* Top bar */
+.app-navbar {
+  min-height: 3.5rem;
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(10, 126, 164, 0.14) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+}
+
+.navbar-title {
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1rem + 0.5vw, 1.2rem);
+  color: var(--ocean-deep);
+}
+
+.btn-ocean-ghost {
+  color: var(--ocean-deep);
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.45rem;
+}
+
+.btn-ocean-ghost:hover {
+  background: var(--ocean-tint);
+  color: var(--ocean-deep);
+}
+
+.user-role-badge {
+  background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-deep)) !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.data-cap-hint {
+  padding: 0.35rem 0;
+  border-left: 3px solid var(--ocean-bright);
+  padding-left: 0.65rem;
+  margin-left: 0.05rem;
+  background: linear-gradient(90deg, rgba(14, 165, 201, 0.06), transparent);
+  border-radius: 0 0.35rem 0.35rem 0;
+}
+
+.app-content {
+  max-width: 100%;
+}
+
+/* Cards */
+.card.shadow-sm {
+  border: 1px solid rgba(10, 126, 164, 0.12);
+  border-radius: var(--app-card-radius);
+  box-shadow: 0 10px 28px rgba(8, 76, 97, 0.07) !important;
+}
+
+.card-header {
+  background: linear-gradient(90deg, rgba(232, 244, 250, 0.98), #fff);
+  border-bottom: 1px solid rgba(10, 126, 164, 0.12);
+  font-weight: 600;
+  color: var(--ocean-deep);
+}
+
+.kpi-card {
+  border-radius: var(--app-card-radius);
+  border: 1px solid rgba(10, 126, 164, 0.12);
+  background: linear-gradient(155deg, #fff 0%, var(--ocean-tint) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4rem;
+  height: 4rem;
+  background: radial-gradient(circle at top right, rgba(244, 185, 66, 0.2), transparent 70%);
+  pointer-events: none;
+}
+
+.kpi-card .text-muted {
+  color: var(--text-muted-ocean) !important;
+}
+
+.border-primary {
+  border-color: var(--ocean-mid) !important;
+}
+
+.bg-primary {
+  background-color: var(--ocean-mid) !important;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--ocean-mid) 0%, var(--ocean-deep) 130%);
+  border-color: var(--ocean-mid);
+}
+
+.btn-primary:hover {
+  background-color: var(--ocean-deep);
+  border-color: var(--ocean-deep);
+  filter: brightness(1.05);
+}
+
+.btn-success {
+  background-color: #0d9f6e;
+  border-color: #0d9f6e;
+}
+
+.btn-outline-primary {
+  color: var(--ocean-mid);
+  border-color: var(--ocean-mid);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--ocean-mid);
+  border-color: var(--ocean-mid);
+  color: #fff;
+}
+
+/* POS */
+.pos-layout .card {
+  border-radius: var(--app-card-radius);
+}
+
+.pos-product-table-wrap {
+  max-height: calc(100vh - 220px);
+}
+
+.pos-search {
+  max-width: 280px;
+}
+
+/* Login */
+.login-page {
+  background: #f8fafc;
+}
+
+.login-hero {
+  background: linear-gradient(145deg, var(--ocean-deep) 0%, var(--ocean-mid) 42%, #065a73 100%);
+  flex-basis: 48%;
+  min-height: 42vh;
+  color: #f8fbff;
+}
+
+@media (min-width: 992px) {
+  .login-hero {
+    min-height: 100vh;
+    flex-basis: 52%;
+    max-width: 560px;
+  }
+}
+
+.login-hero-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  background-image:
+    radial-gradient(circle at 20% 30%, #fff 1px, transparent 1.5px),
+    radial-gradient(circle at 80% 70%, #fff 1px, transparent 1.5px);
+  background-size: 48px 48px;
+}
+
+.login-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(170deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.06));
+  pointer-events: none;
+}
+
+.login-badge {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(6px);
+}
+
+.login-hero-title {
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.login-company-name {
+  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  line-height: 1.12;
+  color: #fff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.24);
+}
+
+.login-hero-lead {
+  font-size: 1.02rem;
+  max-width: 28rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.login-feature-list {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.login-hero-tags .login-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.82rem;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(4px);
+}
+
+.login-feature-icon {
+  color: var(--sand-accent);
+  flex-shrink: 0;
+}
+
+.login-form-shell {
+  flex-basis: 100%;
+  background: linear-gradient(180deg, #fff 0%, var(--ocean-tint) 120%);
+}
+
+@media (min-width: 992px) {
+  .login-form-shell {
+    flex-basis: 48%;
+    min-height: 100vh;
+  }
+}
+
+.login-card {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(10, 126, 164, 0.14);
+  box-shadow: 0 18px 50px rgba(8, 76, 97, 0.12), 0 2px 8px rgba(8, 76, 97, 0.08) !important;
+}
+
+.login-form-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: linear-gradient(145deg, var(--ocean-mid), var(--ocean-deep));
+  box-shadow: 0 8px 24px rgba(8, 76, 97, 0.35);
+}
+
+.login-page .input-group-text {
+  border-color: rgba(10, 126, 164, 0.18);
+}
+
+.login-page .form-control:focus {
+  border-color: var(--ocean-mid);
+  box-shadow: 0 0 0 0.2rem rgba(10, 126, 164, 0.15);
+}
+
+/* Tables */
+.table thead.table-light {
+  background: var(--ocean-tint) !important;
+}
+
+.badge.bg-success {
+  background-color: #0d9f6e !important;
+}
+
+.badge.bg-warning {
+  background-color: var(--sand-accent) !important;
+  color: #1e293b !important;
+}
+
+/* System map */
+.sys-flow-card {
+  border-left: 4px solid var(--ocean-bright);
+}
+
+.sys-link-pill {
+  font-size: 0.8rem;
+}
+
+/* Responsive — không ép sidebar full-width trên tablet */
+@media (max-width: 991.98px) {
+  .pos-product-table-wrap {
+    max-height: 42vh;
+  }
+}
+
+.table-sm th,
+.table-sm td {
+  vertical-align: middle;
+}
+
+.font-monospace {
+  font-size: 0.85rem;
+}
+
+.tracking-wide {
+  letter-spacing: 0.06em;
+}

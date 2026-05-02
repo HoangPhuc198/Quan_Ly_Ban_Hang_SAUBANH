@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Tồn kho{% endblock %}
+{% block page_title %}Tồn kho{% endblock %}
+{% block content %}
+<ul class="nav nav-tabs mb-3" id="stockTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="t1-tab" data-bs-toggle="tab" data-bs-target="#t1" type="button">Tồn kho hiện tại</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="t2-tab" data-bs-toggle="tab" data-bs-target="#t2" type="button">Sắp hết</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="t3-tab" data-bs-toggle="tab" data-bs-target="#t3" type="button">Hàng tồn lâu</button>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="t1">
+    <div class="card shadow-sm"><div class="card-body p-0 table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light"><tr>
+          {% if ton_kho and ton_kho|length > 0 %}
+            {% for k in ton_kho[0].keys() %}<th>{{ k }}</th>{% endfor %}
+          {% else %}<th>Không có dữ liệu</th>{% endif %}
+        </tr></thead>
+        <tbody>
+          {% for row in ton_kho %}
+          <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div></div>
+  </div>
+  <div class="tab-pane fade" id="t2">
+    <div class="card shadow-sm"><div class="card-body p-0 table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light"><tr>
+          {% if sap_het and sap_het|length > 0 %}
+            {% for k in sap_het[0].keys() %}<th>{{ k }}</th>{% endfor %}
+          {% else %}<th>Không có dữ liệu</th>{% endif %}
+        </tr></thead>
+        <tbody>
+          {% for row in sap_het %}
+          <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div></div>
+  </div>
+  <div class="tab-pane fade" id="t3">
+    <div class="card shadow-sm"><div class="card-body p-0 table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light"><tr>
+          {% if hang_ton_lau and hang_ton_lau|length > 0 %}
+            {% for k in hang_ton_lau[0].keys() %}<th>{{ k }}</th>{% endfor %}
+          {% else %}<th>Không có dữ liệu</th>{% endif %}
+        </tr></thead>
+        <tbody>
+          {% for row in hang_ton_lau %}
+          <tr>{% for v in row.values() %}<td>{{ v }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div></div>
+  </div>
+</div>
+{% endblock %}
